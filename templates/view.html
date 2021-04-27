@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% for user in users %}
+        <h2>Имя пользователя: {{ user.username }}</h2>
+        <p><b>Почта: {{user.email}} </b><br>
+        <p><b>Пароль: {{user.password}} </b><br>
+        <a class="nav-link" href=del_user/{{user._id}}" </a>
+{% endfor %}
+{% endblock %}

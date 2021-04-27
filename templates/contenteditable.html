@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Сгенерировать сертификат.</h1>
+     <form name="test" method="post" action="">
+      <p><b>Выберите форму сертификата:</b><Br>
+       <input type="radio" name="browser" value="ie">Базовая<Br>
+       <input type="radio" name="browser" value="opera">Проектная<Br>
+      </p>
+      <p><b>Название курса:</b><br>
+	    <textarea name="username1">  </textarea>
+      </p>
+      <p><b>Дата начала:</b><br>
+      <textarea name="date3">  </textarea>
+      </p>
+      <p><b>Дата завершения:</b><br>
+      <textarea name="date4">  </textarea>
+      </p>
+      <p><b>Загрузите файл со списком :</b><br>
+       <input type="file">
+      </p>
+      <p><input type="submit" value="Сгенерировать файл"></p>
+     </form>
+{% endblock %}

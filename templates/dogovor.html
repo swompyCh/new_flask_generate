@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>Сгенерировать заявку.</h1>
+     <form action = "" method = "post">
+      <p><b>Выберите форму сертификата:</b><Br>
+       <input type="radio" name="browser" choose="s_14">Есть 14 лет<Br>
+       <input type="radio" name="browser" choose="do_14">Нету 14 лет<Br>
+      </p>
+      <p><b>Имя,фамилия и отчество(при наличии) ребёнка:</b><br>
+         <p><input name="fio2"></p>
+      <p><b>Имя,фамилия и отчество(при наличии) родителя:</b><br>
+         <p><input name="fio"></p>
+         <p><b>Класс, полное наименование общеобразовательной организации:</b><br>
+	    <p><input type = "text" name = "klass"></p>
+         <p><b>обучение по дополнительной общеразвивающей программе:</b><br>
+	    <p><input type = "text" name = "program"></p>
+         <p><b>Направление:</b><br>
+	    <p><input type = "text" name = "direction"></p>
+         <p><b>Телефон(родитель):</b><br>
+            <p><input type = "text" name = "telephone"></p>
+         <p><b>Телефон(ребёнок):</b><br>
+            <p><input type = "text" name = "telephone2"></p>
+         <p><b>Дата составление заялвения:</b><br>
+            <p><input type = "text" name = "date"></p>
+      </p>
+      <p><input type = "submit" value = "Отправить" /></p>
+     </form>
+{% endblock %}

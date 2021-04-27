@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>Сгенерировать сертификат.</h1>
+        <form action = "/gen_certificate" method = "post">
+            <p><b>Выберите форму сертификата:</b><Br>
+                <input type="radio" name="browser" value="Base">Базовая<Br>
+                <input type="radio" name="browser" value="Project">Проектная<Br>
+                <input type="radio" name="browser" value="Event">Мероприятие<Br>
+                <p><b>Название курса:</b><br>
+                    <p><input type = "text" name = "program"></p>
+                <p><b>Имя и фамилия:</b><br>
+                    <p><textarea name = "FullName"></textarea></p>
+                <p><b>Дата начала курса:</b><br>
+                    <p><input type = "text" name = "date1"></p>
+                <p><b>Дата конца курса:</b><br>
+                    <p><input type = "text" name = "date2"></p>
+            <p><input type = "submit" value = "Отправить" /></p>
+        </form>
+{% endblock %}
