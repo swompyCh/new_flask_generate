@@ -61,30 +61,45 @@ def gen_dogovor():
 @app.route('/reg', methods=['post', 'get'])
 def reg():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
         email = request.form.get('email')
-
-        post = {"username": username,
-                "password": password,
-                "email": email}
-
-        if db.users.count({"email": email}) > 0:
-            return "<h2>ERROR! USER FIND</h2>"
+        passwd = request.form.get('password')
+        new_collection = re.sub(r"[@.]", "", email)
+        print(new_collection)
+        if new_collection in db.collection_names():
+            return {"false email"}
         else:
-            db.users.insert_one(post).inserted_id
-
-            email_collection = email
-            # print(email_collection)
-            email_collection = re.sub(r"[@.]", "", email)
-            # print(email)
-            collections_user = {email_collection: email_collection}
-            db[email_collection].insert_one({
-                'username': username,
-                'email': email,
-                'password': password})
-
+            users = db[new_collection]
+            req = {
+                "username": new_collection,
+                "email": email,
+                "password": passwd
+            }
+            users.insert_one(req)
+            global list_collections
+            list_collections = db.collection_names()
+            print(list_collections)
+        return {"status": "ok", "email": new_collection}
     return render_template('registration.html')
+
+
+@app.route('/auth', methods=['post', 'get'])
+def auth():
+    if request.method == 'POST':
+        user_password = request.form.get('password')
+        user_email = request.form.get('email')
+        get_collections = re.sub(r"[@.]", "", user_email)
+        print(user_password, user_email)
+        if get_collections in db.collection_names():
+            users = db[get_collections]
+            print(users.email, users.password)
+            if users.email == user_email and users.password == user_password:
+                return "successfully"
+            else:
+                return "error"
+        #     return "successfully"
+        # else:
+        #     return "wrong password or email"
+    return render_template('auth.html')
 
 
 @app.route('/view')
@@ -98,19 +113,6 @@ def del_user(user_id):
     # print(res)
     users = db.users.find()
     return render_template('view.html', users=db.users.find())
-
-
-@app.route('/auth')
-def auth():
-    if request.method == 'POST':
-        password = request.form.get('password')
-        email = request.form.get('email')
-        get_collections = re.sub(r"[@.]", "", email)
-        if get_collections in db.collection_names():
-            return "successfully"
-        else:
-            return "wrong password or email"
-    return render_template('auth.html')
 
 
 print(db.collection_names())
