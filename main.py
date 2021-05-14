@@ -12,6 +12,10 @@ db = client["test"]
 user = db.users
 post = db.posts
 
+list_collections = []
+list_collections = db.collection_names()
+# print(list_collections)
+
 
 @app.route('/')
 @app.route('/home')
@@ -54,8 +58,8 @@ def gen_dogovor():
     return render_template('dogovor.html')
 
 
-@app.route('/login', methods=['post', 'get'])
-def login():
+@app.route('/reg', methods=['post', 'get'])
+def reg():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -71,16 +75,16 @@ def login():
             db.users.insert_one(post).inserted_id
 
             email_collection = email
-            print(email_collection)
+            # print(email_collection)
             email_collection = re.sub(r"[@.]", "", email)
-            print(email)
+            # print(email)
             collections_user = {email_collection: email_collection}
             db[email_collection].insert_one({
                 'username': username,
                 'email': email,
                 'password': password})
 
-    return render_template('login.html')
+    return render_template('registration.html')
 
 
 @app.route('/view')
@@ -91,9 +95,25 @@ def view():
 @app.route('/del_user/<user_id>', methods=['post', 'get'])
 def del_user(user_id):
     res = db.users.delete_one({"_id": ObjectId(user_id)})
-    print(res)
+    # print(res)
     users = db.users.find()
     return render_template('view.html', users=db.users.find())
+
+
+@app.route('/auth')
+def auth():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        email = request.form.get('email')
+        get_collections = re.sub(r"[@.]", "", email)
+        if get_collections in db.collection_names():
+            return "successfully"
+        else:
+            return "wrong password or email"
+    return render_template('auth.html')
+
+
+print(db.collection_names())
 
 
 if __name__ == '__main__':
