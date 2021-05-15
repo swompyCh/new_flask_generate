@@ -4,8 +4,7 @@ from dogovor import dogovor
 from pymongo import MongoClient
 from bson import ObjectId
 import re
-
-
+import time
 
 app = Flask(__name__)
 
@@ -62,7 +61,7 @@ def gen_dogovor():
 def reg():
     if request.method == 'POST':
         user_email = request.form.get('email')
-        user_passwd = request.form.get('pass')
+        user_passwd = request.form.get('password')
         print(user_passwd, user_email)
         new_collection = re.sub(r"[@.]", "", user_email)
         if new_collection in db.collection_names():
@@ -87,33 +86,25 @@ def reg():
 def auth():
     if request.method == 'POST':
         user_email = request.form.get('email')
-        user_passwd = request.form.get('pass')
+        user_passwd = request.form.get('password')
         get_collection = re.sub(r"[@.]", "", user_email)
-        print(user_email, user_passwd)
+        # print(user_email, user_passwd)
+
         if get_collection in db.collection_names():
             users = db[get_collection]
             for user in users.find():
-                print(user['password'], user['email'])
-            for user in users.find():
                 if user['email'] == user_email and user['password'] == user_passwd:
-                    return "success"
+                    return {"Status": "success"}
                 else:
-                    return "error"
+                    return {"Status": "Wrong password or email. Try again"}
         else:
             render_template('auth.html')
+
     return render_template('auth.html')
 
 
 @app.route('/view')
 def view():
-    return render_template('view.html', users=db.users.find())
-
-
-@app.route('/del_user/<user_id>', methods=['post', 'get'])
-def del_user(user_id):
-    res = db.users.delete_one({"_id": ObjectId(user_id)})
-    # print(res)
-    users = db.users.find()
     return render_template('view.html', users=db.users.find())
 
 
