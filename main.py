@@ -5,15 +5,15 @@ from pymongo import MongoClient
 from bson import ObjectId
 import re
 
+
+
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)
 db = client["test"]
-user = db.users
-post = db.posts
 
-list_collections = []
-list_collections = db.collection_names()
+# list_collections = []
+# list_collections = db.collection_names()
 # print(list_collections)
 
 
@@ -61,44 +61,46 @@ def gen_dogovor():
 @app.route('/reg', methods=['post', 'get'])
 def reg():
     if request.method == 'POST':
-        email = request.form.get('email')
-        passwd = request.form.get('password')
-        new_collection = re.sub(r"[@.]", "", email)
-        print(new_collection)
+        user_email = request.form.get('email')
+        user_passwd = request.form.get('pass')
+        print(user_passwd, user_email)
+        new_collection = re.sub(r"[@.]", "", user_email)
         if new_collection in db.collection_names():
-            return {"false email"}
+            return {"status": "false_email"}
         else:
             users = db[new_collection]
             req = {
                 "username": new_collection,
-                "email": email,
-                "password": passwd
+                "name": "",
+                "email": user_email,
+                "password": user_passwd
             }
             users.insert_one(req)
             global list_collections
             list_collections = db.collection_names()
             print(list_collections)
-        return {"status": "ok", "email": new_collection}
+        return {"status": "ok", "username": new_collection}
     return render_template('registration.html')
 
 
-@app.route('/auth', methods=['post', 'get'])
+@app.route('/auth', methods=['GET', 'POST'])
 def auth():
     if request.method == 'POST':
-        user_password = request.form.get('password')
         user_email = request.form.get('email')
-        get_collections = re.sub(r"[@.]", "", user_email)
-        print(user_password, user_email)
-        if get_collections in db.collection_names():
-            users = db[get_collections]
-            print(users.email, users.password)
-            if users.email == user_email and users.password == user_password:
-                return "successfully"
-            else:
-                return "error"
-        #     return "successfully"
-        # else:
-        #     return "wrong password or email"
+        user_passwd = request.form.get('pass')
+        get_collection = re.sub(r"[@.]", "", user_email)
+        print(user_email, user_passwd)
+        if get_collection in db.collection_names():
+            users = db[get_collection]
+            for user in users.find():
+                print(user['password'], user['email'])
+            for user in users.find():
+                if user['email'] == user_email and user['password'] == user_passwd:
+                    return "success"
+                else:
+                    return "error"
+        else:
+            render_template('auth.html')
     return render_template('auth.html')
 
 
