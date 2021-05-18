@@ -103,9 +103,9 @@ def auth():
     return render_template('auth.html')
 
 
-@app.route('/view')
-def view():
-    return render_template('view.html', users=db.users.find())
+# @app.route('/view')
+# def view():
+#     return render_template('view.html', users=db.users.find())
 
 
 print(db.collection_names())
